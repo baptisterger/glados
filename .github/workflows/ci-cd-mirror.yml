@@ -31,6 +31,3 @@ jobs:
           git remote add target git@github.com:EpitechPGE3-2025/G-FUN-500-TLS-5-1-glados-8.git
           git push target main --force
 
-# vérifier si on est sur le repo miroir
-# 
-
