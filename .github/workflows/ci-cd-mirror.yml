@@ -1,0 +1,32 @@
+name: CI/CD to Initial Repo
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Compile project
+        run: |
+          cd Glados
+          make
+
+      - name: Push to initial repo
+        if: success()
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.PUSH_TOKEN }}
+          repository: ton-user/ton-repo-initial
+          branch: main
+          force: true
+
