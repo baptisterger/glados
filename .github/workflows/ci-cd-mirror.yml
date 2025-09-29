@@ -10,6 +10,7 @@ permissions:
 
 jobs:
   build-and-deploy:
+    if: ${{ github.repository == 'baptisterger/glados' }}
     runs-on: ubuntu-latest
 
     steps:
