@@ -16,27 +16,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Cache Stack
-        uses: actions/cache@v3
-        with:
-          path: |
-            ~/.stack
-            Glados/.stack-work
-          key: ${{ runner.os }}-stack-${{ hashFiles('Glados/stack.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-stack-
-
       - name: Compile project
         run: |
           cd Glados
           make
 
-      - name: Push to initial repo
-        if: success()
-        uses: ad-m/github-push-action@v0.8.0
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.8.1
         with:
-          github_token: ${{ secrets.PUSH_TOKEN }}
-          repository: EpitechPGE3-2025/G-FUN-500-TLS-5-1-glados-8
-          branch: main
-          force: true
+          ssh-private-key: ${{ secrets.SSH_KEY }}
 
+      - name: Push to initial repo via SSH
+        run: |
+          git remote add target git@github.com:EpitechPGE3-2025/G-FUN-500-TLS-5-1-glados-8.git
+          git push target main --force
