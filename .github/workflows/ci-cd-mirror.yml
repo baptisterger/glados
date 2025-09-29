@@ -26,7 +26,7 @@ jobs:
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.PUSH_TOKEN }}
-          repository: melissaepitech/G-FUN-500-TLS-5-1-glados-8
+          repository: melissahammouche/G-FUN-500-TLS-5-1-glados-8
           branch: main
           force: true
 
