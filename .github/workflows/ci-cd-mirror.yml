@@ -24,6 +24,11 @@ jobs:
           cd Glados
           make
 
+      - name: Run tests
+        run: |
+          cd Glados
+          stack test
+
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
