@@ -7,7 +7,7 @@ type Env = M.Map String LispVal
 type EvalM = ExceptT LispError (ReaderT Env IO)
 
 data LispError = UnboundVar String | TypeError String | NumArgs Int [LispVal]
-               deriving (Show)
+               deriving (Show, Eq)
 
 data Procedure = Procedure [String] LispVal Env
 instance Show Procedure where show _ = "#<procedure>"
