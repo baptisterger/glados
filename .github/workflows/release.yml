@@ -1,0 +1,28 @@
+name: Build and Release
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - "v*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Compile project
+        run: |
+          cd Glados
+          make
+
+      - name: Create GitHub release and upload binary
+        uses: softprops/action-gh-release@v1
+        with:
+          files: Glados/bin/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
