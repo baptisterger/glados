@@ -16,6 +16,16 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Cache Stack
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.stack
+            Glados/.stack-work
+          key: ${{ runner.os }}-stack-${{ hashFiles('Glados/stack.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-stack-
+
       - name: Compile project
         run: |
           cd Glados
@@ -26,7 +36,7 @@ jobs:
         uses: ad-m/github-push-action@v0.8.0
         with:
           github_token: ${{ secrets.PUSH_TOKEN }}
-          repository: baptisterger/G-FUN-500-TLS-5-1-glados-8
+          repository: EpitechPGE3-2025/G-FUN-500-TLS-5-1-glados-8
           branch: main
           force: true
 
