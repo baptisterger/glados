@@ -60,3 +60,5 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - Glados
+    - hspec
+    - hspec-discover

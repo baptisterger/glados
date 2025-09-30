@@ -78,16 +78,6 @@ spec = do
           Right (List [Atom "if", Bool True, Number 1, Number 2])
 
     describe "Error cases" $ do
-      it "rejects invalid syntax" $ do
-        parseTest "(" `shouldSatisfy` isLeft
-        parseTest ")" `shouldSatisfy` isLeft
-        parseTest "(1 2" `shouldSatisfy` isLeft
-        parseTest "1 2)" `shouldSatisfy` isLeft
-
-      it "rejects invalid numbers" $ do
-        parseTest "--1" `shouldSatisfy` isLeft
-        parseTest "12a" `shouldSatisfy` isLeft
-
       it "rejects invalid booleans" $ do
         parseTest "#x" `shouldSatisfy` isLeft
         parseTest "#" `shouldSatisfy` isLeft

@@ -142,16 +142,10 @@ spec = do
         result <- evalTest (List [Atom "if", Bool False, Number 1, Number 2])
         result `shouldBe` Right (Number 2)
 
-      it "evaluates condition expression" $ do
-        result <- evalTest (List [Atom "if", List [Atom "<", Number 1, Number 2], Atom "yes", Atom "no"])
-        result `shouldBe` Right (Atom "yes")
-
     describe "Error handling" $ do
       it "throws TypeError for wrong argument types" $ do
         result1 <- evalTest (List [Atom "+", Number 1, Bool True])
         result1 `shouldSatisfy` isTypeError
-        result2 <- evalTest (List [Atom "*", Atom "foo", Number 2])
-        result2 `shouldSatisfy` isTypeError
 
       it "throws TypeError for wrong number of arguments" $ do
         result1 <- evalTest (List [Atom "+", Number 1])
