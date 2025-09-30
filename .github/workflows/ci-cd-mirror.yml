@@ -1,0 +1,40 @@
+name: CI/CD to Initial Repo
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    if: ${{ github.repository == 'baptisterger/glados' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 
+
+      - name: Compile project
+        run: |
+          cd Glados
+          make
+
+      - name: Run tests
+        run: |
+          cd Glados
+          stack test
+
+      - name: Setup SSH
+        uses: webfactory/ssh-agent@v0.9.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+
+      - name: Push to initial repo via SSH
+        run: |
+          git remote add target git@github.com:EpitechPGE3-2025/G-FUN-500-TLS-5-1-glados-8.git
+          git push target main --force
