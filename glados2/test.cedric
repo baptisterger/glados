@@ -1,0 +1,16 @@
+
+skibidi main() {
+  float a = 3.14;
+  int b = 2;
+  float c = a * b + 1.0;
+  print(c);
+
+  bool ok = true;
+  bool fail = false;
+  if (ok == true) {
+    print(1);
+  } else {
+    print(0);
+  }
+  
+}

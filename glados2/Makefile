@@ -5,7 +5,7 @@
 ## Makefile
 ##
 
-NAME = Glados
+NAME = glados2
 
 all:
 	stack build
