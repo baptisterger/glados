@@ -1,3 +1,7 @@
+module Ast where
+
+import System.Environment
+
 data Program = Program [TopLevelDecl]
   deriving (Show, Eq)
 
