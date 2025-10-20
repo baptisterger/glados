@@ -1,0 +1,52 @@
+<program> ::= <function>
+
+<function> ::= "skibidi" <identifier> "(" ")" "{" <statement_list> "}"
+
+<statement_list> ::= <statement>*
+
+<statement> ::= <variable_declaration>
+              | <assignment>
+              | <function_call> ";"
+              | <if_statement>
+
+<variable_declaration> ::= <type> <identifier> "=" <expression> ";"
+
+<assignment> ::= <identifier> "=" <expression> ";"
+
+<if_statement> ::= "if" "(" <expression> ")" "{" <statement_list> "}" 
+                 | "if" "(" <expression> ")" "{" <statement_list> "}" "else" "{" <statement_list> "}"
+
+<function_call> ::= <identifier> "(" <argument_list>? ")"
+
+<argument_list> ::= <expression> ("," <expression>)*
+
+<expression> ::= <logical_expression>
+
+<logical_expression> ::= <arithmetic_expression> (<comparison_operator> <arithmetic_expression>)?
+
+<arithmetic_expression> ::= <term> (("+" | "-") <term>)*
+
+<term> ::= <factor> (("*" | "/") <factor>)*
+
+<factor> ::= <number>
+           | <boolean>
+           | <identifier>
+           | "(" <expression> ")"
+
+<type> ::= "int" | "float" | "bool"
+
+<comparison_operator> ::= "==" | "!=" | "<" | ">" | "<=" | ">="
+
+<boolean> ::= "true" | "false"
+
+<number> ::= <integer> | <float>
+
+<integer> ::= <digit>+
+
+<float> ::= <digit>+ "." <digit>+
+
+<digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
+
+<identifier> ::= <letter> (<letter> | <digit>)*
+
+<letter> ::= "a" | "b" | "c" | ... | "z" | "A" | "B" | "C" | ... | "Z"
