@@ -1,8 +1,8 @@
 module Lib
-    ( someFunc
-    , parseFile
+    ( parseFile
     , Token(..)
     , parseTokens
+    , checkMain
     ) where
 
 import Text.Parsec
@@ -105,22 +105,18 @@ parseTokens = do
   eof
   return tokens
 
+checkMain :: [Token] -> Bool
+checkMain tokens = any isMainKeyword tokens
+  where
+    isMainKeyword (Keyword "main") = True
+    isMainKeyword _ = False
+
 parseFile :: String -> IO ()
 parseFile filename = do
   content <- readFile filename
   case parse parseTokens filename content of
     Left err -> print err
-    Right tokens -> mapM_ print tokens
-
-someFunc :: IO ()
-someFunc = do
-  args <- getArgs
-  case args of
-    [filename] -> parseFile filename
-    [] -> do
-      putStrLn "Reading from stdin..."
-      content <- getContents
-      case parse parseTokens "stdin" content of
-        Left err -> print err
-        Right tokens -> mapM_ print tokens
-    _ -> putStrLn "Usage: program [filename] or use redirection"
+    Right tokens -> do
+      if checkMain tokens
+        then mapM_ print tokens
+        else putStrLn "Error: No 'main' function found"
