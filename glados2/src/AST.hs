@@ -1,3 +1,12 @@
+module AST
+  ( Program(..)
+  , TopLevelDecl(..)
+  , Type(..)
+  , Param(..)
+  , Stmt(..)
+  , Expr(..)
+  ) where
+
 data Program = Program [TopLevelDecl]
   deriving (Show, Eq)
 

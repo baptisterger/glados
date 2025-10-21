@@ -1,9 +1,8 @@
 module Main (main) where
 
-import Lib
-import Text.Parsec
-import Text.Parsec.String (Parser)
-import System.Environment
+import System.Environment (getArgs)
+import System.Exit (exitFailure, exitSuccess)
+import Lib (parseFile, parseStringToAST, hasMain)
 
 main :: IO ()
 main = do
@@ -13,10 +12,15 @@ main = do
     [] -> do
       putStrLn "Reading from stdin..."
       content <- getContents
-      case parse parseTokens "stdin" content of
-        Left err -> print err
-        Right tokens -> do
-          if checkMain tokens
-            then mapM_ print tokens
-            else putStrLn "Error: No 'main' function found"
-    _ -> putStrLn "Usage: program [filename] or use redirection"
+      case parseStringToAST content of
+        Left err -> do
+          putStrLn ("Parse error: " ++ show err)
+          exitFailure
+        Right ast -> do
+          print ast
+          if hasMain ast
+            then putStrLn "Found main" >> exitSuccess
+            else putStrLn "No main function found" >> exitFailure
+    _ -> do
+      putStrLn "Usage: glados2 [filename]  (or run with no args to read from stdin)"
+      exitFailure
