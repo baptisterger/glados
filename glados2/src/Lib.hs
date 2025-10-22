@@ -11,7 +11,7 @@ import Control.Monad (void)
 import Data.Functor.Identity (Identity)
 import System.IO
 
-import AST
+import Ast
   ( Program(..)
   , TopLevelDecl(..)
   , Type(..)

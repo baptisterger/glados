@@ -1,4 +1,4 @@
-module AST
+module Ast
   ( Program(..)
   , TopLevelDecl(..)
   , Type(..)
