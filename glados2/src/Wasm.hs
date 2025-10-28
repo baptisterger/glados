@@ -16,6 +16,7 @@ data WasmInstr =
   | F32Add | F32Sub | F32Mul | F32Div
   | I32Eq | I32Ne | I32Lt | I32Gt
   | Call String
+  | Return
   | Drop
   | Block [WasmInstr]
   | If [WasmInstr] (Maybe [WasmInstr])

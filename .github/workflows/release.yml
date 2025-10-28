@@ -22,7 +22,7 @@ jobs:
           make
 
       - name: Debug build output
-        run: ls -R glados1/
+        run: ls -R glados2/
 
       - name: Create GitHub release and upload binary
         uses: softprops/action-gh-release@v1

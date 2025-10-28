@@ -12,6 +12,7 @@ instrToWat instr = case instr of
   I32Mul -> "i32.mul"
   I32Eq -> "i32.eq"
   Call fname -> "call " ++ fname
+  Return -> "return"
   Drop -> "drop"
   If thenInstrs Nothing -> 
     "if\n" ++ unlines (map ("  " ++) (map instrToWat thenInstrs)) ++ "end"
@@ -38,7 +39,6 @@ wasmTypeToWat F32 = "f32"
 moduleToWat :: WasmModule -> String
 moduleToWat mod = unlines $
   [ "(module" ] ++
-  [ "  (import \"env\" \"print\" (func $print (param i32)))" ] ++
   map funcToWat (wasmFunctions mod) ++
   [ "  (export \"main\" (func $main))" ] ++
   [ ")" ]

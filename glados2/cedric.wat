@@ -1,9 +1,9 @@
 (module
-  (import "env" "print" (func $print (param i32)))
 (func $main
+  (result i32)
+  (local f32)
   (local i32)
-  (local i32)
-  (local i32)
+  (local f32)
   (local i32)
   (local i32)
   f32.const 3.14
@@ -16,9 +16,6 @@
   f32.const 1.0
   i32.add
   local.set 2
-  local.get 2
-  call $print
-  drop
   i32.const 1
   local.set 3
   i32.const 0
@@ -28,13 +25,13 @@
   i32.eq
   if
   i32.const 1
-  call $print
-  drop
+  return
 else
-  i32.const 0
-  call $print
-  drop
+  i32.const -1
+  return
 end
+  i32.const 0
+  return
 )
 
   (export "main" (func $main))
