@@ -18,15 +18,15 @@ jobs:
 
       - name: Compile project
         run: |
-          cd Glados
+          cd glados2
           make
 
       - name: Debug build output
-        run: ls -R Glados/
+        run: ls -R glados1/
 
       - name: Create GitHub release and upload binary
         uses: softprops/action-gh-release@v1
         with:
-          files: Glados/*
+          files: glados2/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
