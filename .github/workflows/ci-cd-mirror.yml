@@ -21,14 +21,14 @@ jobs:
 
       - name: Compile project
         run: |
-          cd Glados
+          cd glados2
           make
 
       - name: Run tests
         run: |
-          cd Glados
+          cd glados2
           stack test
-
+  
       - name: Setup SSH
         uses: webfactory/ssh-agent@v0.9.1
         with:
