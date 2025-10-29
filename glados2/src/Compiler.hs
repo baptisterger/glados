@@ -12,7 +12,10 @@ data CompileContext = CompileContext
   } deriving Show
 
 compileProgram :: Program -> String
-compileProgram (Program decls) = moduleToWat $ W.WasmModule (map compileFuncDecl [d | d@(FuncDecl _ _ _) <- decls]) []
+compileProgram (Program decls) = moduleToWat $ W.WasmModule (map compileFuncDecl (filter isFuncDecl decls)) []
+  where
+    isFuncDecl (FuncDecl _ _ _) = True
+    isFuncDecl _ = False
 
 compileFuncDecl :: TopLevelDecl -> W.WasmFunc
 compileFuncDecl (FuncDecl name params body) = W.WasmFunc
