@@ -5,7 +5,6 @@ import qualified Wasm as W
 import WasmGenerator
 import qualified Data.Map as Map
 
--- Contexte étendu pour gérer les locales
 data CompileContext = CompileContext
   { ctxVars :: Map.Map String Int
   , ctxNextLocal :: Int
@@ -13,74 +12,93 @@ data CompileContext = CompileContext
   } deriving Show
 
 compileProgram :: Program -> String
-compileProgram (Program decls) = moduleToWat $ W.WasmModule functions []
-  where functions = [compileFuncDecl decl | decl@(FuncDecl _ _ _) <- decls]
+compileProgram (Program decls) = moduleToWat $ W.WasmModule (map compileFuncDecl [d | d@(FuncDecl _ _ _) <- decls]) []
 
 compileFuncDecl :: TopLevelDecl -> W.WasmFunc
 compileFuncDecl (FuncDecl name params body) = W.WasmFunc
   { W.funcName = name
-  , W.funcParams = map (\(Param ty _) -> W.typeToWasm ty) params
+  , W.funcParams = map (W.typeToWasm . \(Param ty _) -> ty) params
   , W.funcResult = Just W.I32
   , W.funcLocals = ctxLocals finalCtx
   , W.funcBody = instrs
   }
   where 
+    paramNames = map (\(Param _ n) -> n) params
     paramCtx = CompileContext 
-      { ctxVars = Map.fromList $ zip (map (\(Param _ n) -> n) params) [0..]
+      { ctxVars = Map.fromList $ zip paramNames [0..]
       , ctxNextLocal = length params
       , ctxLocals = []
       }
     (instrs, finalCtx) = compileStmts paramCtx body
 
 compileStmts :: CompileContext -> [Stmt] -> ([W.WasmInstr], CompileContext)
-compileStmts ctx [] = ([], ctx)
-compileStmts ctx (stmt:rest) = 
-  let (instrs1, ctx1) = compileStmt ctx stmt
-      (instrs2, ctx2) = compileStmts ctx1 rest
-  in (instrs1 ++ instrs2, ctx2)
+compileStmts ctx stmts = foldl step ([], ctx) stmts
+  where step (accInstrs, accCtx) stmt = 
+          let (newInstrs, newCtx) = compileStmt accCtx stmt
+          in (accInstrs ++ newInstrs, newCtx)
 
 compileStmt :: CompileContext -> Stmt -> ([W.WasmInstr], CompileContext)
-compileStmt ctx stmt = case stmt of
-  StmtExpr expr -> (compileExpr ctx expr ++ [W.Drop], ctx)
-  
-  StmtVarDecl ty name expr -> 
-    let localIdx = ctxNextLocal ctx
-        newCtx = ctx 
-          { ctxVars = Map.insert name localIdx (ctxVars ctx)
-          , ctxNextLocal = localIdx + 1
-          , ctxLocals = ctxLocals ctx ++ [W.typeToWasm ty]
-          }
-        instrs = compileExpr ctx expr ++ [W.LocalSet localIdx]
-    in (instrs, newCtx)
-  
-  StmtIf cond thenStmts elseStmts -> 
-    let condInstrs = compileExpr ctx cond
-        (thenInstrs', _) = compileStmts ctx thenStmts
-        elseInstrs' = case elseStmts of
-          Nothing -> Nothing
-          Just stmts -> let (instrs, _) = compileStmts ctx stmts in Just instrs
-    in (condInstrs ++ [W.If thenInstrs' elseInstrs'], ctx)
-  
-  StmtReturn Nothing -> ([W.I32Const 0, W.Return], ctx)
-  StmtReturn (Just expr) -> (compileExpr ctx expr ++ [W.Return], ctx)
-  
-  _ -> ([], ctx)
+compileStmt ctx (StmtExpr expr) = 
+  compileExprStmt ctx expr
+
+compileStmt ctx (StmtVarDecl ty name expr) = 
+  compileVarDecl ctx ty name expr
+
+compileStmt ctx (StmtIf cond thenStmts elseStmts) = 
+  compileIfStmt ctx cond thenStmts elseStmts
+
+compileStmt ctx (StmtReturn mexpr) = 
+  compileReturnStmt ctx mexpr
+
+compileStmt ctx (StmtWhile _ _) = 
+  ([], ctx)
+
+compileExprStmt :: CompileContext -> Expr -> ([W.WasmInstr], CompileContext)
+compileExprStmt ctx expr = 
+  (compileExpr ctx expr ++ [W.Drop], ctx)
+
+compileVarDecl :: CompileContext -> Type -> String -> Expr -> ([W.WasmInstr], CompileContext)
+compileVarDecl ctx ty name expr = 
+  let idx = ctxNextLocal ctx
+      instrs = compileExpr ctx expr ++ [W.LocalSet idx]
+      newCtx = addLocalVar ctx name idx ty
+  in (instrs, newCtx)
+
+addLocalVar :: CompileContext -> String -> Int -> Type -> CompileContext
+addLocalVar ctx name idx ty = ctx
+  { ctxVars = Map.insert name idx (ctxVars ctx)
+  , ctxNextLocal = idx + 1
+  , ctxLocals = ctxLocals ctx ++ [W.typeToWasm ty]
+  }
+
+compileIfStmt :: CompileContext -> Expr -> [Stmt] -> Maybe [Stmt] -> ([W.WasmInstr], CompileContext)
+compileIfStmt ctx cond thenStmts elseStmts = 
+  let condInstrs = compileExpr ctx cond
+      thenInstrs = fst $ compileStmts ctx thenStmts
+      elseInstrs = case elseStmts of
+        Just stmts -> Just (fst $ compileStmts ctx stmts)
+        Nothing -> Nothing
+      ifInstr = W.If thenInstrs elseInstrs
+  in (condInstrs ++ [ifInstr], ctx)
+
+compileReturnStmt :: CompileContext -> Maybe Expr -> ([W.WasmInstr], CompileContext)
+compileReturnStmt ctx mexpr = 
+  let valueInstrs = case mexpr of
+        Just expr -> compileExpr ctx expr
+        Nothing -> [W.I32Const 0]
+  in (valueInstrs ++ [W.Return], ctx)
 
 compileExpr :: CompileContext -> Expr -> [W.WasmInstr]
-compileExpr ctx expr = case expr of
-  IntConst n -> [W.I32Const n]
-  FloatConst f -> [W.F32Const f]
-  BoolConst True -> [W.I32Const 1]
-  BoolConst False -> [W.I32Const 0]
-  
-  Var name -> case Map.lookup name (ctxVars ctx) of
-    Just idx -> [W.LocalGet idx]
-    Nothing -> error $ "Undefined variable: " ++ name
-    
-  BinOp "+" l r -> compileExpr ctx l ++ compileExpr ctx r ++ [W.I32Add]
-  BinOp "*" l r -> compileExpr ctx l ++ compileExpr ctx r ++ [W.I32Mul]
-  BinOp "==" l r -> compileExpr ctx l ++ compileExpr ctx r ++ [W.I32Eq]
-    
-  Ast.Call fname args -> concatMap (compileExpr ctx) args ++ [W.Call ("$" ++ fname)]
-    
-  _ -> error $ "Unsupported expression: " ++ show expr
+compileExpr ctx (IntConst n)    = [W.I32Const n]
+compileExpr ctx (FloatConst f)  = [W.F32Const f]
+compileExpr ctx (BoolConst b)   = [W.I32Const $ if b then 1 else 0]
+compileExpr ctx (Var name)      = maybe (error $ "Undefined variable: " ++ name) (\idx -> [W.LocalGet idx]) (Map.lookup name $ ctxVars ctx)
+compileExpr ctx (BinOp op l r)  = compileExpr ctx l ++ compileExpr ctx r ++ [compileBinOp op]
+compileExpr ctx (Ast.Call f as) = concatMap (compileExpr ctx) as ++ [W.Call $ "$" ++ f]
+compileExpr ctx e               = error $ "Unsupported expression: " ++ show e
+
+compileBinOp :: String -> W.WasmInstr
+compileBinOp "+" = W.I32Add
+compileBinOp "*" = W.I32Mul
+compileBinOp "==" = W.I32Eq
+compileBinOp op = error $ "Unsupported operator: " ++ op
