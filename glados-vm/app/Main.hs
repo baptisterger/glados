@@ -1,3 +1,10 @@
+{-
+-- EPITECH PROJECT, 2025
+-- glados-vm [WSL: Ubuntu]
+-- File description:
+-- Main
+-}
+
 module Main (main) where
 
 import System.Environment (getArgs)

@@ -1,3 +1,10 @@
+{-
+-- EPITECH PROJECT, 2025
+-- glados-vm [WSL: Ubuntu]
+-- File description:
+-- WasmDecodeSubset
+-}
+
 module Glados.VM.WasmDecodeSubset
   ( decodeModuleFromFile
   ) where

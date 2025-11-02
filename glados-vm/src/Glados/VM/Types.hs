@@ -1,3 +1,10 @@
+{-
+-- EPITECH PROJECT, 2025
+-- glados-vm [WSL: Ubuntu]
+-- File description:
+-- Types
+-}
+
 module Glados.VM.Types where
 
 import Data.Int
