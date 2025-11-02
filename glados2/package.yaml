@@ -38,6 +38,7 @@ ghc-options:
 
 library:
   source-dirs: src
+  
 
 executables:
   glados2-exe:
@@ -49,6 +50,7 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - glados2
+    - filepath
 
 tests:
   glados2-test:

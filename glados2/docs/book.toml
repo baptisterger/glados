@@ -1,0 +1,23 @@
+[book]
+title = "Langage Cédric"
+authors = ["Baptiste Roger, Melissa Hammouche, Cédric Khambounheuang, Arnaud Rancoule"]
+description = "Documentation complète du langage Cédric : un langage inspiré du C, compilé en WebAssembly."
+language = "fr"
+multilingual = true
+src = "src"
+
+[output.html]
+default-theme = "light"
+preferred-dark-theme = "navy"
+mathjax-support = true
+copy-fonts = true
+# REMPLACEZ l'ancienne ligne additional-js par celle-ci
+additional-js = ["theme/dyslexie_toggle.js"] 
+# AJOUTEZ cette ligne pour votre CSS
+additional-css = ["theme/dyslexie_mode.css"] 
+
+[output.html.search]
+enable = true
+
+[output.html.playground]
+editable = false

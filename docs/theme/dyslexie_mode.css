@@ -1,0 +1,40 @@
+body.dyslexia-mode {
+    font-family: 'OpenDyslexic', 'Atkinson Hyperlegible', Verdana, Arial, sans-serif !important;
+    font-size: 20px !important;
+    line-height: 1.8 !important;
+    word-spacing: 0.2em !important;
+    letter-spacing: 0.5em !important;
+    text-align: left !important;
+
+    background-color: #FFFFFF !important; /* fond clair par défaut */
+}
+
+body.dyslexia-mode p,
+body.dyslexia-mode li,
+body.dyslexia-mode pre,
+body.dyslexia-mode code {
+    word-spacing: 0.5em !important;
+    letter-spacing: 0.15em !important;
+    line-height: 2 !important;
+}
+
+body.dyslexia-mode h1,
+body.dyslexia-mode h2,
+body.dyslexia-mode h3 {
+    letter-spacing: 0.08em !important;
+}
+
+body.dyslexia-mode a {
+    font-weight: bold !important;
+    text-decoration: underline !important;
+}
+
+body.dyslexia-mode em,
+body.dyslexia-mode i {
+    font-style: normal !important;
+    font-weight: bold !important;
+}
+
+body.dyslexia-mode u {
+    text-decoration: none !important;
+}
