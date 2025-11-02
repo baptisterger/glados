@@ -1,0 +1,17 @@
+# Haskell build artifacts
+.stack-work/
+dist-newstyle/
+*.o
+*.hi
+*.dyn_hi
+*.dyn_o
+
+# Python virtual environment
+.venv/
+
+# Generated Wasm binary (if not intended to be committed)
+*.wasm
+
+# Logs and other temporary files
+*.log
+*.backup
