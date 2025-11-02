@@ -24,6 +24,8 @@ dependencies:
 - parsec
 - containers
 - mtl
+- binary
+- bytestring
 
 ghc-options:
 - -Wall

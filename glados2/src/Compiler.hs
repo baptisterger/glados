@@ -17,22 +17,44 @@ compileProgram (Program decls) = moduleToWat $ W.WasmModule (map compileFuncDecl
     isFuncDecl (FuncDecl _ _ _) = True
     isFuncDecl _ = False
 
-compileFuncDecl :: TopLevelDecl -> W.WasmFunc
-compileFuncDecl (FuncDecl name params body) = W.WasmFunc
-  { W.funcName = name
-  , W.funcParams = map (W.typeToWasm . \(Param ty _) -> ty) params
-  , W.funcResult = Just W.I32
-  , W.funcLocals = ctxLocals finalCtx
-  , W.funcBody = instrs
+compileProgramToWasm :: Program -> W.WasmModule
+compileProgramToWasm (Program decls) = W.WasmModule (map compileFuncDecl (filter isFuncDecl decls)) []
+  where
+    isFuncDecl (FuncDecl _ _ _) = True
+    isFuncDecl _ = False
+
+extractParamType (Param ty _) = ty
+
+extractParamName :: Param -> String
+extractParamName (Param _ name) = name
+
+getWasmParamTypes :: [Param] -> [W.WasmType]
+getWasmParamTypes params = map (W.typeToWasm . extractParamType) params
+
+getParamNames :: [Param] -> [String]
+getParamNames params = map extractParamName params
+
+createParamIndexMap :: [String] -> Map.Map String Int
+createParamIndexMap names = Map.fromList (zip names [0..])
+
+createInitialContext :: [Param] -> CompileContext
+createInitialContext params = CompileContext
+  { ctxVars = createParamIndexMap (getParamNames params)
+  , ctxNextLocal = length params
+  , ctxLocals = []
   }
-  where 
-    paramNames = map (\(Param _ n) -> n) params
-    paramCtx = CompileContext 
-      { ctxVars = Map.fromList $ zip paramNames [0..]
-      , ctxNextLocal = length params
-      , ctxLocals = []
-      }
-    (instrs, finalCtx) = compileStmts paramCtx body
+
+compileFuncDecl :: TopLevelDecl -> W.WasmFunc
+compileFuncDecl (FuncDecl name params body) = 
+  let initialContext = createInitialContext params
+      (instructions, finalContext) = compileStmts initialContext body
+  in W.WasmFunc
+    { W.funcName = name
+    , W.funcParams = getWasmParamTypes params
+    , W.funcResult = Just W.I32
+    , W.funcLocals = ctxLocals finalContext
+    , W.funcBody = instructions
+    }
 
 compileStmts :: CompileContext -> [Stmt] -> ([W.WasmInstr], CompileContext)
 compileStmts ctx stmts = foldl step ([], ctx) stmts

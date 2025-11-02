@@ -29,6 +29,7 @@ library
       Compiler
       Lib
       Wasm
+      WasmBinary
       WasmGenerator
   other-modules:
       Paths_glados2
@@ -39,6 +40,8 @@ library
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
   build-depends:
       base >=4.7 && <5
+    , binary
+    , bytestring
     , containers
     , mtl
     , parsec
@@ -55,6 +58,8 @@ executable glados2-exe
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , binary
+    , bytestring
     , containers
     , glados2
     , mtl
@@ -73,6 +78,8 @@ test-suite glados2-test
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , binary
+    , bytestring
     , containers
     , glados2
     , mtl

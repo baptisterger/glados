@@ -3,9 +3,9 @@ module Main (main) where
 import System.Environment (getArgs)
 import System.Exit (exitFailure, exitSuccess)
 import Lib (parseFile, parseStringToAST, hasMain)
-import Compiler (compileProgram)
+import Compiler (compileProgram, compileProgramToWasm)
+import WasmBinary (generateWasmFile)
 
--- Fonction simple pour remplacer l'extension
 replaceExtension :: FilePath -> String -> FilePath
 replaceExtension path newExt = 
   let (base, _) = break (== '.') (reverse path)
@@ -26,10 +26,10 @@ main = do
           if hasMain ast
             then do
               putStrLn "Found main function"
-              let wasmCode = compileProgram ast
-              let outputFile = replaceExtension filename ".wat"
-              writeFile outputFile wasmCode
-              putStrLn $ "WebAssembly generated: " ++ outputFile
+              let wasmModule = compileProgramToWasm ast
+              let wasmFile = replaceExtension filename ".wasm"
+              
+              generateWasmFile wasmModule wasmFile
               exitSuccess
             else do
               putStrLn "No main function found"
@@ -46,8 +46,6 @@ main = do
           if hasMain ast
             then do
               let wasmCode = compileProgram ast
-              putStrLn "=== Generated WebAssembly ==="
-              putStrLn wasmCode
               exitSuccess
             else do
               putStrLn "No main function found"
