@@ -5,9 +5,9 @@
 
 (* Top-level declarations: functions or global variables *)
 <top_level_declaration> ::= <function_declaration>
-                          | <global_variable_declaration>
+                                  | <global_variable_declaration>
 
-(* Function declaration with optional parameters *)
+(* Function declaration: optional keyword (skibidi | fun), name, params and body *)
 <function_declaration> ::= ("skibidi" | "fun")? <identifier> "(" <parameter_list>? ")" <block>
 
 <parameter_list> ::= <parameter> ("," <parameter>)*
@@ -22,10 +22,10 @@
 
 (* Statements *)
 <statement> ::= <variable_declaration>
-              | <expression_statement>
-              | <if_statement>
-              | <while_statement>
-              | <return_statement>
+                  | <expression_statement>
+                  | <if_statement>
+                  | <while_statement>
+                  | <return_statement>
 
 <variable_declaration> ::= <type> <identifier> "=" <expression> ";"
 
@@ -38,23 +38,28 @@
 <return_statement> ::= "return" <expression>? ";"
 
 (* Expressions with operator precedence *)
+(* Assignment is right-associative; comparisons are non-associative; arithmetic follows usual precedence *)
 <expression> ::= <assignment_expression>
 
 <assignment_expression> ::= <comparison_expression>
-                          | <identifier> "=" <assignment_expression>
+                                  | <identifier> "=" <assignment_expression>
 
+(* Comparison allows multi-character operators (==, !=, <=, >=) and single-character (<, >).
+    Longest-match should be preferred by the lexer; the parser treats them uniformly here. *)
 <comparison_expression> ::= <additive_expression> (<comparison_operator> <additive_expression>)?
 
 <additive_expression> ::= <multiplicative_expression> (("+" | "-") <multiplicative_expression>)*
 
 <multiplicative_expression> ::= <primary_expression> (("*" | "/") <primary_expression>)*
 
+(* Primary expressions include numeric and boolean literals, identifiers, calls and parenthesized expressions.
+    Note: integer and float literals may include a leading unary '-' in the concrete syntax. *)
 <primary_expression> ::= <integer_literal>
-                      | <float_literal>
-                      | <boolean_literal>
-                      | <identifier>
-                      | <function_call>
-                      | "(" <expression> ")"
+                             | <float_literal>
+                             | <boolean_literal>
+                             | <identifier>
+                             | <function_call>
+                             | "(" <expression> ")"
 
 (* Function call *)
 <function_call> ::= <identifier> "(" <argument_list>? ")"
@@ -64,12 +69,13 @@
 (* Types *)
 <type> ::= "int" | "float" | "bool"
 
-(* Operators *)
-<comparison_operator> ::= "==" | "!=" | "<" | ">" | "<=" | ">="
+(* Comparison operators: multi-char forms listed first to emphasize longest-match behavior *)
+<comparison_operator> ::= "==" | "!=" | "<=" | ">=" | "<" | ">"
 
 (* Literals *)
 <boolean_literal> ::= "true" | "false"
 
+(* Numeric literals: optional leading unary '-' allowed in concrete syntax *)
 <integer_literal> ::= "-"? <digit>+
 
 <float_literal> ::= "-"? <digit>+ "." <digit>+
@@ -81,16 +87,14 @@
 <digit> ::= "0" | "1" | "2" | "3" | "4" | "5" | "6" | "7" | "8" | "9"
 
 <letter> ::= "a" | "b" | "c" | "d" | "e" | "f" | "g" | "h" | "i" | "j" 
-           | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" 
-           | "u" | "v" | "w" | "x" | "y" | "z" 
-           | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" 
-           | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" 
-           | "U" | "V" | "W" | "X" | "Y" | "Z"
+              | "k" | "l" | "m" | "n" | "o" | "p" | "q" | "r" | "s" | "t" 
+              | "u" | "v" | "w" | "x" | "y" | "z" 
+              | "A" | "B" | "C" | "D" | "E" | "F" | "G" | "H" | "I" | "J" 
+              | "K" | "L" | "M" | "N" | "O" | "P" | "Q" | "R" | "S" | "T" 
+              | "U" | "V" | "W" | "X" | "Y" | "Z"
 
-(* Comments *)
-(* Line comments: // ... \n *)
-(* Comments are handled by the lexer and not part of the syntax tree *)
+(* Comments and whitespace *)
+(* Line comments start with // and extend to the end of the line. Whitespace and comments are skipped by the lexer. *)
 
-(* Reserved words *)
-(* "skibidi", "fun", "if", "else", "while", "return", *)
-(* "int", "float", "bool", "true", "false" *)
+(* Reserved words: these cannot be used as identifiers *)
+(* "skibidi", "fun", "if", "else", "while", "return", "int", "float", "bool", "true", "false" *)

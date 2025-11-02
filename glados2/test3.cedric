@@ -1,0 +1,9 @@
+skibidi main() {
+  float pi = 3.14159;
+  float r = 2.0;
+  float area = pi * r * r;
+  if (area > 10.0) {
+    return 1;
+  }
+  return 0;
+}

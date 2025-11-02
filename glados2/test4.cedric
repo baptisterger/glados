@@ -1,0 +1,9 @@
+skibidi main() {
+  bool a = true;
+  bool b = false;
+  bool c = (a && !b);
+  if (c == true) {
+    return 42;
+  }
+  return -42;
+}

@@ -1,0 +1,9 @@
+skibidi main() {
+  int n = 0;
+  int sum = 0;
+  sum = sum + n;
+  if (n == 0) {
+    return 0;
+  }
+  return sum;
+}

@@ -1,0 +1,9 @@
+skibidi main() {
+  float a = 1.5;
+  float b = 2.5;
+  float d = a + b;
+  if (d == 4.0) {
+    return 100;
+  }
+  return 0;
+}

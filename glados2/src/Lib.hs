@@ -125,7 +125,7 @@ operatorTable :: [[Operator String () Identity Expr]]
 operatorTable =
   [ [binary "*" AssocLeft, binary "/" AssocLeft]
   , [binary "+" AssocLeft, binary "-" AssocLeft]
-  , [binary "==" AssocNone, binary "!=" AssocNone, binary "<" AssocNone, binary ">" AssocNone, binary "<=" AssocNone, binary ">=" AssocNone]
+  , [binary "==" AssocNone, binary "!=" AssocNone, binary "<=" AssocNone, binary ">=" AssocNone, binary "<" AssocNone, binary ">" AssocNone]
   , [assignOp]
   ]
 

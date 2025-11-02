@@ -15,6 +15,8 @@ data WasmInstr =
   | I32Add | I32Sub | I32Mul | I32Div
   | F32Add | F32Sub | F32Mul | F32Div
   | I32Eq | I32Ne | I32Lt | I32Gt
+  | I32Le | I32Ge
+  | F32Eq | F32Ne | F32Lt | F32Gt | F32Le | F32Ge
   | Call String
   | Return
   | Drop

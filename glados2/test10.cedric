@@ -1,0 +1,11 @@
+skibidi main() {
+  // combined arithmetic and boolean checks
+  float f = 2.0;
+  int m = 4;
+  float prod = f * m;
+  bool ok = (prod == 8.0);
+  if (ok) {
+    return 8;
+  }
+  return 0;
+}
