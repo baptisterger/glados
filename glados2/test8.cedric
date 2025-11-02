@@ -1,0 +1,10 @@
+skibidi main() {
+  int i = 1;
+  int j = 2;
+  int k = 3;
+  int s = i + j + k;
+  if (s >= 6) {
+    return s;
+  }
+  return 0;
+}

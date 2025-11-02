@@ -1,0 +1,10 @@
+skibidi main() {
+  bool flag = false;
+  int res = 0;
+  if (flag == true) {
+    res = 1;
+  } else if (flag == false) {
+    res = -1;
+  }
+  return res;
+}
