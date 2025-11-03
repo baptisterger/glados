@@ -106,12 +106,41 @@ cd ../glados2 && stack build
 ## 📚 Documentation
 
 ### GLaDOS Part 2
-Documentation complète dans `glados2/docs/` :
-- **USER_MANUAL.md** : Guide utilisateur complet
-- **GRAMMAR.md** : Grammaire formelle BNF
-- **COMPILATION.md** : Pipeline de compilation
-- **SECURITY.md** : Analyse de sécurité
-- **ACCESSIBILITY.md** : Fonctionnalités d'accessibilité
+### Installation de mdBook sur Linux
+
+```bash
+cargo install mdbook
+```
+
+Si cargo n'est pas installé :
+
+```bash
+curl https://sh.rustup.rs -sSf | sh
+source $HOME/.cargo/env
+```
+
+Vérification :
+
+```bash
+mdbook --version
+```
+
+Générer le livre
+
+```bash
+cd docs
+mdbook build
+```
+
+Les fichiers HTML seront générés dans **docs/book**.
+
+Pour consulter la documentation localement :
+
+```bash
+mdbook serve
+```
+
+Puis ouvrez http://localhost:3000 dans votre navigateur.
 
 ---
 
