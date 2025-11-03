@@ -21,8 +21,6 @@
 - [Gestion des erreurs](technical/error_handling.md)
 
 ## 🇫🇷 Manuel Développeur
-- [Architecture interne](developer/architecture.md)
-- [Étendre le langage](developer/extending_language.md)
 - [Ajout de nouvelles fonctionnalités](developer/adding_features.md)
 
 ## 🇫🇷 Analyse et Inspirations
@@ -40,6 +38,5 @@
 ## 🇬🇧 English Documentation
 - [Overview](en/overview.md)
 - [Syntax](en/syntax.md)
-- [Compilation Process](en/compilation.md)
 - [Virtual Machine](en/vm.md)
 - [Accessibility](en/accessibility.md)

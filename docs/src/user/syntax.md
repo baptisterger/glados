@@ -27,7 +27,7 @@ Cédric supporte trois types de base :
 | Type | Description | Exemple |
 |---    |:-:    |:-:    |
 | int | Entiers | int x = 42; |
-| float | Nomnres à virgule flottante | float pi = 3.14; |
+| float | Nombres à virgule flottante | float pi = 3.14; |
 | bool | Booléens | bool ok = true; |
 
 ---
